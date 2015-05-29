@@ -42,7 +42,8 @@ app.post('/calendar', urlencodedParser, function(req, res) {
 			messages.attachments.push({
 				fallback: google.feed.entry[i].title.$t,
 				color: getRandomColor(), // Can either be one of 'good', 'warning', 'danger'
-				text: google.feed.entry[i].title.$t + "\n" + htmlToText.fromString(google.feed.entry[i].summary.$t)
+				title: google.feed.entry[i].title.$t,
+				text: htmlToText.fromString(google.feed.entry[i].summary.$t)
 			});
 		}
 		
