@@ -4,7 +4,7 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(request, response) {
+app.post('/wikiwiki', function(request, response) {
   response.send('Herro World!');
 });
 
