@@ -1,20 +1,25 @@
-var requestlib = require('request');
+Slack = require('node-slackr');
+var slack = new Slack('https://hooks.slack.com/services/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', {
+	channel: "#neejberhood",
+	username: "slack-bot",
+	icon_url: "http://domain.com/image.png",
+	icon_emoji: ":ghost:"
+})
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
+
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
-app.post('/wikiwiki', function(request, response) {
-	requestlib.post('https://hooks.slack.com/services/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', {"channel": "#neejberhood", "username": "webhookbot", "text": "This is posted to #neejberhood and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"}, function (error, response, body) {
-		  if (!error && response.statusCode == 200) {
-			      console.log(body) // Show the HTML for the Google homepage. 
-		  }
-		  });
-      
-	response.send('Harro World!');
+app.post('/wikiwiki', urlencodedParser, function(request, response) {
+	slack.notify(request.body.user_name + " would like you to read <http://wikiwiki.winak.be/index.php/" + request.body.text + "|" + request.body.text + "> on the WINAK WikiWiki!");
+
+	response.send('Your wish is my command!');
 });
 
 app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+	console.log('Node app is running on port', app.get('port'));
 });
