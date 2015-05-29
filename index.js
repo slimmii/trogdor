@@ -6,7 +6,11 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.post('/wikiwiki', function(request, response) {
-	requestlib.post('https://hooks.slack.com/services/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', {"channel": "#neejberhood", "username": "webhookbot", "text": "This is posted to #neejberhood and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"})
+	requestlib.post('https://hooks.slack.com/services/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', {"channel": "#neejberhood", "username": "webhookbot", "text": "This is posted to #neejberhood and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"}, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+			      console.log(body) // Show the HTML for the Google homepage. 
+		  }
+		  });
       
 	response.send('Herro World!');
 });
