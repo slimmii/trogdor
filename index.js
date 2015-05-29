@@ -18,26 +18,55 @@ var urlencodedParser = bodyParser.urlencoded({
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
+function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+app.post('/calendar', urlencodedParser, function(req, res) {
+	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
+		var google = JSON.parse(body);
+		messages = {
+			text: "WINAK Calendar",
+			channel: "#scripttest",
+			attachments: []
+		};
+
+		for (var i in google.feed.entry) {
+			console.log(google.feed.entry[i].title.$t);
+			
+			messages.attachments.push({
+				fallback: google.feed.entry[i].title.$t,
+				color: getRandomColor(), // Can either be one of 'good', 'warning', 'danger'
+				text: google.feed.entry[i].title.$t + "\n" + htmlToText.fromString(google.feed.entry[i].summary.$t)
+			});
+		}
+		
+		slack.notify(messages);		
+		
+		res.send('');
+	});
+});
+
 app.post('/wikiwiki', urlencodedParser, function(req, res) {
-	
+
 	//slack.notify(messages);
 	requestLib.get('http://wikiwiki.winak.be/index.php/' + req.body.text, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
-		    $ = cheerio.load(body);
-			var text = htmlToText.fromString($('#bodyContent').html(), {
-			});
+			$ = cheerio.load(body);
+			var text = htmlToText.fromString($('#bodyContent').html(), {});
 			console.log(text);
 			//slack.notify(text);
-			
+
 			var html = text.replace(
-    // Replace out the new line character.
-    new RegExp( "\\n--------------------------------------------------------------------------------\\n", "g" ), 
-    
-    // Put in ... so we can see a visual representation of where
-    // the new line characters were replaced out.
-    "" 
-    );
-			
+				new RegExp("\\n--------------------------------------------------------------------------------\\n", "g"),
+				""
+			);
+
 			messages = {
 				text: "WINAK WikiWiki",
 				channel: "#neejberhood",
@@ -48,20 +77,11 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 					text: html
 				}]
 			};
-			
+
 			slack.notify(messages);
 		}
 		res.send('');
 	});
-
-	// function(error, result) {
-	// 		console.log(result.body);
-	// 		var text = htmlToText.fromString(result.body, {
-	// 			wordwrap: 130
-	// 		});
-	// 		console.log(text);
-	// 		response.send('test');
-	// 	});
 
 });
 
