@@ -12,7 +12,7 @@ app.post('/wikiwiki', function(request, response) {
 		  }
 		  });
       
-	response.send('Herro World!');
+	response.send('Harro World!');
 });
 
 app.listen(app.get('port'), function() {
