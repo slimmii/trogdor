@@ -31,19 +31,22 @@ app.post('/calendar', urlencodedParser, function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
 		messages = {
-			text: "WINAK",
+			text: "WINAK Kalender",
 			channel: "#neejberhood",
 			attachments: []
 		};
 
 		for (var i in google.feed.entry) {
 			console.log(google.feed.entry[i].title.$t);
-			
+		    var text = htmlToText.fromString(google.feed.entry[i].summary.$t);
+			text = text.substring(0, text.lastIndexOf("\n"));
+
+
 			messages.attachments.push({
 				fallback: google.feed.entry[i].title.$t,
 				color: getRandomColor(), // Can either be one of 'good', 'warning', 'danger'
 				title: google.feed.entry[i].title.$t,
-				text: htmlToText.fromString(google.feed.entry[i].summary.$t)
+				text: text
 			});
 		}
 		
