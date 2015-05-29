@@ -14,7 +14,25 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.post('/wikiwiki', urlencodedParser, function(request, response) {
-	slack.notify(request.body.user_name + " would like you to read <http://wikiwiki.winak.be/index.php/" + request.body.text + "|" + request.body.text + "> on the WINAK WikiWiki!");
+	messages = {
+	  text: "WINAK WikiWiki",
+	  channel: "#neejberhood",
+	  attachments: [
+	    {
+	      fallback: request.body.text + " [ <http://wikiwiki.winak.be/index.php/" + request.body.text + "|" + request.body.text + ">]",
+	      color: "#36a64f", // Can either be one of 'good', 'warning', 'danger'
+		  thumb_url : "http://www.winak.be/sites/default/files/WINAK%20Schild%20ZW-OR.png",
+	      fields: [
+	        {
+	          title: request.body.text,
+	          value: "This wiki wiki page is pretty awesome <http://wikiwiki.winak.be/index.php/" + request.body.text + "|" + request.body.text + ">",
+	          short: false 
+	        }
+	      ]
+	    }
+	  ]
+	};
+	slack.notify(messages);
 
 	response.send('');
 });
