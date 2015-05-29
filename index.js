@@ -32,7 +32,7 @@ app.post('/calendar', urlencodedParser, function(req, res) {
 		var google = JSON.parse(body);
 		messages = {
 			text: "WINAK Calendar",
-			channel: "#scripttest",
+			channel: "#neejberhood",
 			attachments: []
 		};
 
