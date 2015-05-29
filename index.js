@@ -1,4 +1,4 @@
-var request = require('request');
+var requestlib = require('request');
 var express = require('express');
 var app = express();
 
@@ -6,7 +6,9 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 app.post('/wikiwiki', function(request, response) {
-  response.send('Herro World!');
+	requestlib.post('https://hooks.slack.com/services/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', {"channel": "#neejberhood", "username": "webhookbot", "text": "This is posted to #neejberhood and comes from a bot named webhookbot.", "icon_emoji": ":ghost:"})
+      
+	response.send('Herro World!');
 });
 
 app.listen(app.get('port'), function() {
