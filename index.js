@@ -1,9 +1,8 @@
 Slack = require('node-slackr');
 var slack = new Slack('https://hooks.slack.com/services/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', {
 	channel: "#neejberhood",
-	username: "slack-bot",
-	icon_url: "http://domain.com/image.png",
-	icon_emoji: ":ghost:"
+	username: "trogdor",
+	icon_url: "http://i.stack.imgur.com/ihN3m.png"
 })
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -17,7 +16,7 @@ app.use(express.static(__dirname + '/public'));
 app.post('/wikiwiki', urlencodedParser, function(request, response) {
 	slack.notify(request.body.user_name + " would like you to read <http://wikiwiki.winak.be/index.php/" + request.body.text + "|" + request.body.text + "> on the WINAK WikiWiki!");
 
-	response.send('Your wish is my command!');
+	response.send('');
 });
 
 app.listen(app.get('port'), function() {
