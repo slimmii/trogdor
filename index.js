@@ -31,7 +31,7 @@ app.post('/calendar', urlencodedParser, function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
 		messages = {
-			text: "WINAK Calendar",
+			text: "WINAK",
 			channel: "#neejberhood",
 			attachments: []
 		};
