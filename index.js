@@ -19,13 +19,45 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 function getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+	var letters = '0123456789ABCDEF'.split('');
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
 }
+
+app.post('/meme', urlencodedParser, function(req, res) {
+	var arguments = req.body.text.split(' ');
+	console.log(arguments);
+	requestLib.post({
+		url: 'https://api.imgflip.com/caption_image',
+		form: {
+			username: 'slimmiii',
+			password: 'testbunniesyay',
+			text0: arguments[1],
+			text1: arguments[2],
+			template_id: arguments[0]
+		}
+	}, function(err, httpResponse, body) {
+		var meme = JSON.parse(body);
+		console.log(meme.data.url);
+
+		messages = {
+			text: "Meme Generator",
+			channel: "#neejberhood",
+			attachments: [{
+				image_url: meme.data.url
+				
+			}]
+		};
+		
+		slack.notify(messages);
+		res.send('');
+		
+
+	})
+});
 
 app.post('/calendar', urlencodedParser, function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
@@ -38,7 +70,7 @@ app.post('/calendar', urlencodedParser, function(req, res) {
 
 		for (var i in google.feed.entry) {
 			console.log(google.feed.entry[i].title.$t);
-		    var text = htmlToText.fromString(google.feed.entry[i].summary.$t);
+			var text = htmlToText.fromString(google.feed.entry[i].summary.$t);
 			text = text.substring(0, text.lastIndexOf("\n"));
 
 
@@ -49,9 +81,9 @@ app.post('/calendar', urlencodedParser, function(req, res) {
 				text: text
 			});
 		}
-		
-		slack.notify(messages);		
-		
+
+		slack.notify(messages);
+
 		res.send('');
 	});
 });
