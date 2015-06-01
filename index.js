@@ -50,8 +50,8 @@ app.post('/meme', urlencodedParser, function(req, res) {
 				text: "Meme Generator",
 				channel: "#neejberhood",
 				attachments: [{
-					image_url: meme.data.url
-
+					image_url: meme.data.url,
+					fallback: meme.data.url
 				}]
 			};
 
