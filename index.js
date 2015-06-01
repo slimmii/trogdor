@@ -30,33 +30,49 @@ function getRandomColor() {
 app.post('/meme', urlencodedParser, function(req, res) {
 	var arguments = req.body.text.split(' ');
 	console.log(arguments);
-	requestLib.post({
-		url: 'https://api.imgflip.com/caption_image',
-		form: {
-			username: 'slimmiii',
-			password: 'testbunniesyay',
-			text0: arguments[1],
-			text1: arguments[2],
-			template_id: arguments[0]
-		}
-	}, function(err, httpResponse, body) {
-		var meme = JSON.parse(body);
-		console.log(meme.data.url);
 
-		messages = {
-			text: "Meme Generator",
-			channel: "#neejberhood",
-			attachments: [{
-				image_url: meme.data.url
-				
-			}]
-		};
-		
-		slack.notify(messages);
-		res.send('');
-		
+	if (arguments.length == 3) {
 
-	})
+		requestLib.post({
+			url: 'https://api.imgflip.com/caption_image',
+			form: {
+				username: 'slimmiii',
+				password: 'testbunniesyay',
+				text0: arguments[1],
+				text1: arguments[2],
+				template_id: arguments[0]
+			}
+		}, function(err, httpResponse, body) {
+			var meme = JSON.parse(body);
+			console.log(meme.data.url);
+
+			messages = {
+				text: "Meme Generator",
+				channel: "#neejberhood",
+				attachments: [{
+					image_url: meme.data.url
+
+				}]
+			};
+
+			slack.notify(messages);
+			res.send('');
+
+
+		})
+	} else {
+		requestLib.get('https://api.imgflip.com/get_memes', function(error, response, body) {
+			var memes = JSON.parse(body);
+			var buffer = "";
+			for (var i in memes.data.memes) {
+				var meme = memes.data.memes[i];
+				buffer += meme.name + " [" + meme.id + "]\n";
+			}
+			
+			res.send(buffer);
+		});
+		
+	}
 });
 
 app.post('/calendar', urlencodedParser, function(req, res) {
