@@ -41,8 +41,8 @@ app.post('/meme', urlencodedParser, function(req, res) {
 			form: {
 				username: 'slimmiii',
 				password: 'testbunniesyay',
-				text0: arguments[1],
-				text1: arguments[2],
+				text0: arguments[1].replace(/['"]+/g, ''),
+				text1: arguments[2].replace(/['"]+/g, ''),
 				template_id: arguments[0]
 			}
 		}, function(err, httpResponse, body) {
