@@ -28,7 +28,7 @@ function getRandomColor() {
 }
 
 app.post('/meme', urlencodedParser, function(req, res) {
-	var arguments = req.body.text.split(' ');
+	var arguments = req.body.text.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
 	console.log(arguments);
 
 	if (arguments.length == 3) {
@@ -63,7 +63,7 @@ app.post('/meme', urlencodedParser, function(req, res) {
 	} else {
 		requestLib.get('https://api.imgflip.com/get_memes', function(error, response, body) {
 			var memes = JSON.parse(body);
-			var buffer = "Usage:\n/meme ID text0 text1\n\n";
+			var buffer = "Usage:\n/meme ID \"your top text here\" \"your bottom text here\"\n\n";
 			for (var i in memes.data.memes) {
 				var meme = memes.data.memes[i];
 				buffer += meme.name + " [" + meme.id + "]\n";
