@@ -63,7 +63,7 @@ app.post('/meme', urlencodedParser, function(req, res) {
 	} else {
 		requestLib.get('https://api.imgflip.com/get_memes', function(error, response, body) {
 			var memes = JSON.parse(body);
-			var buffer = "";
+			var buffer = "Usage:\n//meme ID text0 text1\n\n";
 			for (var i in memes.data.memes) {
 				var meme = memes.data.memes[i];
 				buffer += meme.name + " [" + meme.id + "]\n";
