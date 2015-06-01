@@ -28,8 +28,11 @@ function getRandomColor() {
 }
 
 app.post('/meme', urlencodedParser, function(req, res) {
-	var arguments = req.body.text.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g)
-	console.log(arguments);
+	var arguments = [];
+	if (req.body.text != "") {
+		arguments = req.body.text.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);	
+		console.log(arguments);
+	}
 
 	if (arguments.length == 3) {
 
