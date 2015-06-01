@@ -4,6 +4,11 @@ var slack = new Slack('https://hooks.slack.com/services/T04N3PW6G/B053V2J6X/cZ31
 	username: "trogdor",
 	icon_url: "http://i.stack.imgur.com/ihN3m.png"
 })
+var swanson = new Slack('https://hooks.slack.com/services/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', {
+	channel: "#neejberhood",
+	username: "ron.swanson",
+	icon_url: "http://s3-ak.buzzfeed.com/static/enhanced/webdr05/2013/7/21/18/original-16475-1374446648-13.jpg"
+})
 var express = require('express');
 var bodyParser = require('body-parser');
 var htmlToText = require('html-to-text');
@@ -27,10 +32,17 @@ function getRandomColor() {
 	return color;
 }
 
+app.post('/swanson', urlencodedParser, function(req, res) {
+	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
+		var ronquote = JSON.parse(body);
+		swanson.notify(ronquote.quote);
+	});
+});
+
 app.post('/meme', urlencodedParser, function(req, res) {
 	var arguments = [];
 	if (req.body.text != "") {
-		arguments = req.body.text.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);	
+		arguments = req.body.text.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
 		console.log(arguments);
 	}
 
@@ -71,10 +83,10 @@ app.post('/meme', urlencodedParser, function(req, res) {
 				var meme = memes.data.memes[i];
 				buffer += meme.name + " [" + meme.id + "]\n";
 			}
-			
+
 			res.send(buffer);
 		});
-		
+
 	}
 });
 
