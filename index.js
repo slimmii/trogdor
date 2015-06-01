@@ -51,7 +51,7 @@ app.post('/meme', urlencodedParser, function(req, res) {
 
 			messages = {
 				text: "Meme Generator [ " + req.body.user_name + "]",
-				channel: req.body.channel_name,
+				channel: "#" + req.body.channel_name,
 				attachments: [{
 					image_url: meme.data.url,
 					fallback: meme.data.url
