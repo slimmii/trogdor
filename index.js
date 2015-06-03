@@ -173,7 +173,7 @@ app.post('/lastquote', urlencodedParser, function(req, res) {
 		});
 	});
 
-}
+});
 
 app.post('/quote', urlencodedParser, function(req, res) {
 	var id = req.body.text;
