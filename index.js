@@ -165,7 +165,20 @@ app.post('/quote', urlencodedParser, function(req, res) {
 					console.error(err);
 					res.send("Error " + err);
 				} else {
-					res.send(result.rows);
+					if (result.rows.length > 0) {
+						messages = {
+							text: "WINAK WikiWiki",
+							channel: "#neejberhood",
+							attachments: [{
+								text: result.rows[0].quote
+							}]
+						};
+
+						slack.notify(messages);
+						res.send("");
+					} else {
+						res.send(result.rows.length);
+					}
 				}
 			});
 		});
