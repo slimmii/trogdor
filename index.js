@@ -154,6 +154,10 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 
 });
 
+function parseQuote(quote) {
+	return "[" + quote.id + "] " + quote.quote;  
+}
+
 app.post('/lastquote', urlencodedParser, function(req, res) {
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -164,7 +168,7 @@ app.post('/lastquote', urlencodedParser, function(req, res) {
 				res.send("Error " + err);
 			} else {
 				if (result.rows.length > 0) {
-					slack.notify(result.rows[0].quote);
+					slack.notify(parseQuote(result.rows[0]));
 					res.send("");
 				} else {
 					res.send("There were no quotes available");
@@ -187,8 +191,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 					res.send("Error " + err);
 				} else {
 					if (result.rows.length > 0) {
-						slack.notify(result.rows[0].quote
-						);
+						slack.notify(parseQuote(result.rows[0].quote));
 						res.send("");
 					} else {
 						res.send("I'm sorry this quote could not be found!");
