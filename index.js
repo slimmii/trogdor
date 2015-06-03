@@ -166,18 +166,11 @@ app.post('/quote', urlencodedParser, function(req, res) {
 					res.send("Error " + err);
 				} else {
 					if (result.rows.length > 0) {
-						messages = {
-							text: "Quote Database",
-							channel: "#neejberhood",
-							attachments: [{
-								text: result.rows[0].quote
-							}]
-						};
-
-						slack.notify(messages);
+						slack.notify(result.rows[0].quote
+						);
 						res.send("");
 					} else {
-						res.send(result.rows.length);
+						res.send("I'm sorry this quote could not be found!");
 					}
 				}
 			});
