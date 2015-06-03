@@ -167,7 +167,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 				} else {
 					if (result.rows.length > 0) {
 						messages = {
-							text: "WINAK WikiWiki",
+							text: "Quote Database",
 							channel: "#neejberhood",
 							attachments: [{
 								text: result.rows[0].quote
