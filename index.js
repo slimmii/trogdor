@@ -160,9 +160,9 @@ app.post('/quote', urlencodedParser, function(req, res) {
 			done();
 			if (err) {
 				console.error(err);
-				response.send("Error " + err);
+				res.send("Error " + err);
 			} else {
-				response.send(result.rows);
+				res.send(result.rows);
 			}
 		});
 	});
