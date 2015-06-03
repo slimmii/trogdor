@@ -155,17 +155,35 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 });
 
 app.post('/quote', urlencodedParser, function(req, res) {
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query('SELECT * FROM quotes', function(err, result) {
-			done();
-			if (err) {
-				console.error(err);
-				res.send("Error " + err);
-			} else {
-				res.send(result.rows);
-			}
+	var id = req.body.text;
+
+	if (/^\+?\d+$/.test(id)) {
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			client.query('SELECT * FROM quotes WHERE id = $1', [id], function(err, result) {
+				done();
+				if (err) {
+					console.error(err);
+					res.send("Error " + err);
+				} else {
+					res.send(result.rows);
+				}
+			});
 		});
-	});
+
+	} else {
+
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			client.query('SELECT * FROM quotes', function(err, result) {
+				done();
+				if (err) {
+					console.error(err);
+					res.send("Error " + err);
+				} else {
+					res.send(result.rows);
+				}
+			});
+		});
+	}
 });
 
 app.listen(app.get('port'), function() {
