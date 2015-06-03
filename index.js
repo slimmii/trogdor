@@ -191,7 +191,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 					res.send("Error " + err);
 				} else {
 					if (result.rows.length > 0) {
-						slack.notify(parseQuote(result.rows[0].quote));
+						slack.notify(parseQuote(result.rows[0]));
 						res.send("");
 					} else {
 						res.send("I'm sorry this quote could not be found!");
