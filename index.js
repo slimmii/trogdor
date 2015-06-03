@@ -125,6 +125,7 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 	requestLib.get('http://wikiwiki.winak.be/index.php/' + req.body.text, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			$ = cheerio.load(body);
+			
 			var text = htmlToText.fromString($('#bodyContent').html(), {});
 			console.log(text);
 			//slack.notify(text);
@@ -150,6 +151,9 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 		res.send('');
 	});
 
+});
+
+app.post('/snaps', urlencodedParser, function(req, res) {
 });
 
 app.listen(app.get('port'), function() {
