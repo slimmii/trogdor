@@ -91,12 +91,41 @@ app.post('/meme', urlencodedParser, function(req, res) {
 	}
 });
 
-app.post('/calendar', urlencodedParser, function(req, res) {
+app.post('/calendar/winak', urlencodedParser, function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
 		messages = {
 			text: "WINAK Kalender",
-			channel: "#neejberhood",
+			channel: "#" + req.body.channel_name,
+			attachments: []
+		};
+
+		for (var i in google.feed.entry) {
+			console.log(google.feed.entry[i].title.$t);
+			var text = htmlToText.fromString(google.feed.entry[i].summary.$t);
+			text = text.substring(0, text.lastIndexOf("\n"));
+
+
+			messages.attachments.push({
+				fallback: google.feed.entry[i].title.$t,
+				color: getRandomColor(), // Can either be one of 'good', 'warning', 'danger'
+				title: google.feed.entry[i].title.$t,
+				text: text
+			});
+		}
+
+		slack.notify(messages);
+
+		res.send('');
+	});
+});
+
+app.post('/calendar/neejberhood', urlencodedParser, function(req, res) {
+	requestLib.get('http://www.google.com/calendar/feeds/epo9gispro34af2goam9dekscg%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
+		var google = JSON.parse(body);
+		messages = {
+			text: "Neejberhood Kalender",
+			channel: "#" + req.body.channel_name,
 			attachments: []
 		};
 
@@ -184,6 +213,7 @@ app.post('/lastquote', urlencodedParser, function(req, res) {
 });
 
 app.post('/quote', urlencodedParser, function(req, res) {
+	console.log(process.env.DATABASE_URL);
 	var id = req.body.text;
 
 	if (/^\+?\d+$/.test(id)) {
@@ -205,8 +235,9 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		});
 
 	} else {
+ 	   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			console.log(err);
 
-		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			client.query('SELECT * FROM quotes', function(err, result) {
 				done();
 				if (err) {
