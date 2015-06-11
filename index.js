@@ -66,10 +66,9 @@ app.post('/slap', urlencodedParser, function(req, res) {
 
 app.post('/addslap', urlencodedParser, function(req, res) {
 
-	var addquery = 'insert into slap_variations (slap) values \'' + req.body.text + '\';';
 
 	messages = {
-		text: "*" + addquery + "*",
+		text: "*" + "test vanuit systeem" + "*",
 		channel: "#" + req.body.channel_name
 	};
 	slack.notify(messages);
