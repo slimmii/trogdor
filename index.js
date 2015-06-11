@@ -45,7 +45,7 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 
 app.post('/slap', urlencodedParser, function(req, res) {
 	if (req.body.user_name == req.body.text) {
-		res.send("You can't slap yourself silly14.");
+		res.send("You can't slap yourself silly.");
 	}
 
 	var selectquery = 'SELECT * FROM slap_variations;';
@@ -53,7 +53,9 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query(selectquery, function(err, result) {
 			done();
-			res.send('succes');
+			if (result.rows.length > 0) {
+				res.send(result.rows[0].slap);
+			}
 		});
 	});
 });
