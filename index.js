@@ -42,13 +42,14 @@ function getRandomSlap() {
 		client.query('SELECT * FROM slap_variations;', function(err, result) {
 			done();
 			if(err) {
-				return err;
+				return "Error occured";
 			} else {
 				return "this is a slap.";
 			}
 			});
 
 		});
+	return "Dont know";
 }
 
 app.post('/swanson', urlencodedParser, function(req, res) {
@@ -63,7 +64,8 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		res.send("You can't slap yourself silly.");
 	}
 
-	res.send(getRandomSlap());
+	var message = getRandomSlap();
+	res.send(message);
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
