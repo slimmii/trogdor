@@ -45,7 +45,7 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 
 app.post('/slap', urlencodedParser, function(req, res) {
 	if (req.body.user_name == req.body.text) {
-		res.send('You can\'t slap yourself silly10.');
+		res.send('You can\'t slap yourself silly.');
 	} else {
 
 	var selectquery = 'SELECT * FROM slap_variations;';
@@ -57,8 +57,10 @@ app.post('/slap', urlencodedParser, function(req, res) {
 					res.send(err);
 				} else {
 					if (result.rows.length > 0) {
+						var random_int = randomInt(0, result.rows.length);
+						var slap_message = result.rows[random_int].slap;
 						messages = {
-							text: result.rows[0].slap,
+							text: slap_message,
 							channel: "#" + req.body.channel_name
 						};
 						slack.notify(messages);
