@@ -49,7 +49,9 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		res.send("You can't slap yourself silly.");
 	}
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		done();
+		client.query('SELECT * FROM slap_variations;', function(err, result) {
+			done();
+		});
 
 	});
 
