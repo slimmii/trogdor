@@ -54,6 +54,12 @@ app.post('/slap', urlencodedParser, function(req, res) {
 			if (err) {
 				res.send("ERROR: " + err);
 			} else {
+				if (result.rows.length > 0) {
+					slack.notify(result.rows[0]);
+					res.send("");
+				} else {
+					res.send("There were no slaps available");
+				}
 			}
 		});
 
