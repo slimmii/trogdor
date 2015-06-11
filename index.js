@@ -66,14 +66,19 @@ app.post('/slap', urlencodedParser, function(req, res) {
 
 app.post('/addslap', urlencodedParser, function(req, res) {
 
-	var addquery = 'insert into slap_variations (slap) values (\'' + req.body.text + '\');';
+	var addquery = 'INSERT INTO slap_variations (slap) VALUES (\'' + req.body.text + '\');';
 
-	messages = {
-		text: "*" + addquery + "*",
-		channel: "#" + req.body.channel_name
-	};
-	slack.notify(messages);
-	res.send('');
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			client.query(addquery, [id], function(err, result) {
+				done();
+				if (err) {
+					console.error(err);
+					res.send("Error " + err);
+				} else {
+					res.send("Your slap has been added.")
+				}
+			});
+		});
 	
 });
 
