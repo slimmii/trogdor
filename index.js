@@ -72,6 +72,12 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 		client.query(addquery, function(err, result) {
 			done();
 		});
+		messages = {
+		text: result,
+		channel: "#" + req.body.channel_name
+	};
+	slack.notify(messages);
+	res.send('');
 	});
 	
 });
