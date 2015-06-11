@@ -41,18 +41,6 @@ function getRandomSlap() {
 	var selectquery = 'SELECT * FROM slap_variations;';
 	var return_value = "Don't know";
 
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query(addquery, function(err, result) {
-			done();
-			if(err) {
-				return_value = "error";
-			} else {
-				return_value = "yes";
-			}
-			});
-
-		});
-
 	return return_value;
 }
 
