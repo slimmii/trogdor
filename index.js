@@ -42,6 +42,9 @@ function getRandomSlap() {
 	var return_value = "Don't know";
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query(selectquery, function(err, result) {
+			done();
+		});
 	});
 
 	return return_value;
