@@ -45,16 +45,22 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 });
 
 app.post('/slap', urlencodedParser, function(req, res) {
-	var slapvariations = [
-		"name1 slaps name2 violently in the face with a stick.",
-		"name1 slaps name2 gently on the ass.",
-		"name1 slaps name2 in the face with a dildo.",
-		"name1 slaps the man out of name2."
-	]
+	var slap_variations = [];
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('SELECT slap FROM slap_variations;', function(err, result) {
+			done();
+			if(err) {
+				res.send(err);
+			} else {
+				slap_variations = result;
+			}
+			});
 
-	var random_int = randomInt(0, slapvariations.length);
+		});
 
-	var slap_message = slapvariations[random_int].replace("name1", req.body.user_name);
+	var random_int = randomInt(0, slap_variations.length);
+
+	var slap_message = slap_variations[random_int].replace("name1", req.body.user_name);
 	slap_message = slap_message.replace("name2", req.body.text);
 	messages = {
 		text: "*" + slap_message + "*",
