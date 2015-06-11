@@ -54,6 +54,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 			if (err) {
 				res.send("ERROR: " + err);
 			} else {
+			}
 		});
 
 	});
