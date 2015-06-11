@@ -253,7 +253,7 @@ function parseQuote(quote, req) {
 }
 
 app.post('/lastquote', urlencodedParser, function(req, res) {
-
+    
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('select * from quotes order by id desc limit 1;', function(err, result) {
 			done();
@@ -278,23 +278,39 @@ app.post('/quote', urlencodedParser, function(req, res) {
 	var id = req.body.text;
 
 	if (/^\+?\d+$/.test(id)) {
-		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			client.query('SELECT * FROM quotes WHERE id = $1', [id], function(err, result) {
-				done();
-				if (err) {
-					console.error(err);
-					res.send("Error " + err);
-				} else {
-					if (result.rows.length > 0) {
-						slack.notify(parseQuote(result.rows[0], req));
-						res.send("");
-					} else {
-						res.send("I'm sorry this quote could not be found!");
-					}
-				}
-			});
+	    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('SELECT * FROM quotes WHERE id = $1', [id], function(err, result) {
+		done();
+		if (err) {
+			console.error(err);
+			res.send("Error " + err);
+		} else {
+			if (result.rows.length > 0) {
+				slack.notify(parseQuote(result.rows[0], req));
+				res.send("");
+			} else {
+				res.send("I'm sorry this quote could not be found!");
+			}
+		}
 		});
-
+	    });
+	} else if (/^[A-Za-z0-9,;'"\s]+$/.test(id)){
+	    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('SELECT * FROM quotes WHERE quote LIKE "%$1%"',[id], function(err, result) {
+		    done();
+		    if (err) {
+			    console.error(err);
+			    res.send("Error " + err);
+		    } else {
+			    if (result.rows.length > 0) {
+				    slack.notify(parseQuote(result.rows[randomInt(0, result.rows.length-1)], req));
+				    res.send("");
+			    } else {
+				    res.send("I'm sorry this quote could not be found!");
+			    }
+		    }
+		});
+	    });
 	} else {
  	   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			console.log(err);
