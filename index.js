@@ -68,17 +68,12 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 
 	var addquery = 'insert into slap_variations (slap) values \'' + req.body.text + '\';';
 
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query(addquery, function(err, result) {
-			done();
-		});
-		messages = {
-		text: result,
+	messages = {
+		text: "*" + addquery + "*",
 		channel: "#" + req.body.channel_name
 	};
 	slack.notify(messages);
 	res.send('');
-	});
 	
 });
 
