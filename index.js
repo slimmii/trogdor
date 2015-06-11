@@ -62,7 +62,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 						slap_message = slap_message.replace("name1", req.body.user_name);
 						slap_message = slap_message.replace("name2", req.body.text);
 						messages = {
-							text: "*" + slap_message "*",
+							text: "*" + slap_message + "*",
 							channel: "#" + req.body.channel_name
 						};
 						slack.notify(messages);
