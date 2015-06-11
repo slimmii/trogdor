@@ -38,7 +38,20 @@ function randomInt (low, high) {
 }
 
 function getRandomSlap() {
-	return "Dont know";
+	var selectquery = 'SELECT * FROM slap_variations;';
+	var return_value = "Don't know";
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query(selectquery, function(err, result) {
+			done();
+			if(err) {
+				return_value = "Error.";
+			} else {
+				return_value = "Succes.";
+			}
+			});
+
+		});
+	return return_value;
 }
 }
 
