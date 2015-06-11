@@ -73,6 +73,7 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 		});
 
 	res.send("no errors.");
+	res.send(addquery);
 	
 });
 
