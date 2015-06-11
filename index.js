@@ -48,29 +48,6 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	if (req.body.user_name == req.body.text) {
 		res.send("You can't slap yourself silly.");
 	}
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query('SELECT slap FROM slap_variations;', function(err, result) {
-			done();/*
-			if(err) {
-				res.send(err);
-			} else {
-				var random_int = randomInt(0, result.length);
-				
-				var slap_message = result[random_int].replace("name1", req.body.user_name);
-				slap_message = slap_message.replace("name2", req.body.text); 
-
-				slap_message = "test";
-				
-				messages = {
-					text: "*" + slap_message + "*",
-					channel: "#" + req.body.channel_name
-				};
-				slack.notify(messages);
-				res.send('');
-			}
-			});*/
-
-		});
 
 	res.send("SUCCES");
 });
