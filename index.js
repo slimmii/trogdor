@@ -45,14 +45,13 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 });
 
 app.post('/slap', urlencodedParser, function(req, res) {
-	var slap_variations = [];
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('SELECT slap FROM slap_variations;', function(err, result) {
 			done();
 			if(err) {
 				res.send(err);
 			} else {
-				slap_variations = result;
+				res.send(result[0]);
 			}
 			});
 
@@ -62,14 +61,13 @@ app.post('/slap', urlencodedParser, function(req, res) {
 
 	var slap_message = slap_variations[random_int].replace("name1", req.body.user_name);
 	slap_message = slap_message.replace("name2", req.body.text);
-	*/
+	
 	messages = {
-		text: slap_variations[0],
-		//text: "*" + slap_message + "*",
+		text: "*" + slap_message + "*",
 		channel: "#" + req.body.channel_name
 	};
 	slack.notify(messages);
-	res.send('');
+	res.send(''); */
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
