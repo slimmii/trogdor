@@ -38,18 +38,8 @@ function randomInt (low, high) {
 }
 
 function getRandomSlap() {
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query('SELECT * FROM slap_variations;', function(err, result) {
-			done();
-			if(err) {
-				return "Error occured";
-			} else {
-				return "this is a slap.";
-			}
-			});
-
-		});
 	return "Dont know";
+}
 }
 
 app.post('/swanson', urlencodedParser, function(req, res) {
