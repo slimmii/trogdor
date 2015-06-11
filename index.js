@@ -43,7 +43,6 @@ function getRandomSlap() {
 
 	return return_value;
 }
-}
 
 app.post('/swanson', urlencodedParser, function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
