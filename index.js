@@ -37,7 +37,7 @@ function randomInt (low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
-function getRandomSlap() {
+function getRandomSlap(req, res) {
 	var selectquery = 'SELECT * FROM slap_variations;';
 	var return_value = "Don't know";
 
@@ -47,10 +47,13 @@ function getRandomSlap() {
 			if (err) {
 				res.send(err);
 			}
+			else {
+				res.send("succes");
+			}
 		});
 	});
 
-	return return_value;
+	res.send("Don't know.");
 }
 
 app.post('/swanson', urlencodedParser, function(req, res) {
@@ -65,8 +68,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		res.send("You can't slap yourself silly.");
 	}
 
-	var message = getRandomSlap();
-	res.send(message);
+	getRandomSlap(req, res);
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
