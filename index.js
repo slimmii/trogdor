@@ -44,12 +44,11 @@ function getRandomSlap() {
 		client.query(selectquery, function(err, result) {
 			done();
 			if(err) {
-				return_value = "Error.";
+				
 			} else {
-				return_value = "Succes.";
+				
 			}
 			});
-
 		});
 	return return_value;
 }
