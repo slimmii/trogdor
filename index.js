@@ -37,6 +37,20 @@ function randomInt (low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
+function getRandomSlap() {
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('SELECT * FROM slap_variations;', function(err, result) {
+			done();
+			if(err) {
+				res.send(err);
+			} else {
+				return "this is a slap.";
+			}
+			});
+
+		});
+}
+
 app.post('/swanson', urlencodedParser, function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
 		var ronquote = JSON.parse(body);
@@ -49,7 +63,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		res.send("You can't slap yourself silly.");
 	}
 
-	res.send("SUCCES");
+	res.send(getRandomSlap());
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
