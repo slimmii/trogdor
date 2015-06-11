@@ -71,6 +71,9 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query(addquery, function(err, result) {
 			done();
+			if(err) {
+				res.send(err);
+			}
 			});
 
 		});
