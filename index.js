@@ -42,7 +42,7 @@ function getRandomSlap() {
 		client.query('SELECT * FROM slap_variations;', function(err, result) {
 			done();
 			if(err) {
-				res.send(err);
+				return err;
 			} else {
 				return "this is a slap.";
 			}
