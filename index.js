@@ -42,7 +42,7 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 
 app.post('/slap', urlencodedParser, function(req, res) {
 	messages = {
-		text: req.body.text + " testing",
+		text: req.body.user_name + " slaps " + req.body.text + " violently in the face with a stick.",
 		channel: "#" + req.body.channel_name
 	};
 	slack.notify(messages);
