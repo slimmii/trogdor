@@ -49,6 +49,23 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		res.send("You can't slap yourself silly.");
 	}
 
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('select * from quotes order by id desc limit 1;', function(err, result) {
+			done();
+			if (err) {
+				console.error(err);
+				res.send("Error " + err);
+			} else {
+				if (result.rows.length > 0) {
+					slack.notify(parseQuote(result.rows[0], req));
+					res.send("");
+				} else {
+					res.send("There were no quotes available");
+				}
+			}
+		});
+	});
+
 	res.send("SUCCES");
 });
 
