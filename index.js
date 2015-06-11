@@ -33,6 +33,10 @@ function getRandomColor() {
 	return color;
 }
 
+function randomInt (low, high) {
+    return Math.floor(Math.random() * (high - low) + low);
+}
+
 app.post('/swanson', urlencodedParser, function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
 		var ronquote = JSON.parse(body);
@@ -43,9 +47,14 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 app.post('/slap', urlencodedParser, function(req, res) {
 	var slapvariations = [
 		"name1 slaps name2 violently in the face with a stick.",
-		"name1 kicked name2 in the balls."
+		"name1 slaps name2 gently on the ass.",
+		"name1 slaps name2 in the face with a dildo.",
+		"name1 slaps the man out of name2."
 	]
-	var slap_message = slapvariations[1].replace("name1", req.body.user_name);
+
+	var random_int = randomInt(0, slapvariations.length);
+
+	var slap_message = slapvariations[random_int].replace("name1", req.body.user_name);
 	slap_message = slap_message.replace("name2", req.body.text);
 	messages = {
 		text: "*" + slap_message + "*",
