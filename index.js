@@ -73,13 +73,12 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 			done();
 			if(err) {
 				res.send(err);
+			} else {
+				res.send("SUCCES: Your slap has been added.");
 			}
 			});
 
 		});
-
-	res.send("no errors: " + addquery);
-	
 });
 
 app.post('/meme', urlencodedParser, function(req, res) {
