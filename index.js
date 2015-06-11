@@ -56,6 +56,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 			});
 
 		});
+	res.send("SUCCES");
 	/*
 	var random_int = randomInt(0, slap_variations.length);
 
