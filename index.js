@@ -53,9 +53,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query(selectquery, function(err, result) {
 			done();
-			if (result.rows.length > 0) {
-				res.send(result.rows[0].slap);
-			}
+			res.send("succes");
 		});
 	});
 });
