@@ -48,16 +48,6 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	if (req.body.user_name == req.body.text) {
 		res.send("You can't slap yourself silly.");
 	}
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query('SELECT slap FROM slap_variations;', function(err, result) {
-			done();
-			if (err) {
-				res.send("ERROR: " + err);
-			} else {
-			}
-		});
-
-	});
 
 	res.send("SUCCES");
 });
