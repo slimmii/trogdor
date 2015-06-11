@@ -40,6 +40,15 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 	});
 });
 
+app.post('/slap', urlencodedParser, function(req, res) {
+	messages = {
+		text: req.body.text + " testing",
+		channel: "#" + req.body.channel_name
+	};
+	slack.notify(messages);
+	res.send('');
+});
+
 app.post('/meme', urlencodedParser, function(req, res) {
 	var arguments = [];
 	if (req.body.text != "") {
