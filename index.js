@@ -49,13 +49,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	}
 
 	var selectquery = 'SELECT * FROM slap_variations;';
-
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query(selectquery, function(err, result) {
-			done();
-			res.send('succes');
-		});
-	});
+	res.send('Currently unavailable.');
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
