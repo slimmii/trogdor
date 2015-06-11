@@ -59,6 +59,8 @@ app.post('/slap', urlencodedParser, function(req, res) {
 					if (result.rows.length > 0) {
 						var random_int = randomInt(0, result.rows.length);
 						var slap_message = result.rows[random_int].slap;
+						slap_message = slap_message.replace("name1", req.body.user_name);
+						slap_message = slap_message.replace("name2", req.body.text);
 						messages = {
 							text: slap_message,
 							channel: "#" + req.body.channel_name
