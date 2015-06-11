@@ -57,7 +57,12 @@ app.post('/slap', urlencodedParser, function(req, res) {
 				res.send(err);
 			} else {
 				if (result.rows.length > 0) {
-					res.send(result.rows[0].slap);
+					messages = {
+						text: result.rows[0].slap,
+						channel: "#" + req.body.channel_name
+					};
+					slack.notify(messages);
+					res.send("");
 				}
 			}
 			});
