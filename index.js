@@ -46,7 +46,7 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 app.post('/slap', urlencodedParser, function(req, res) {
 	if (req.body.user_name == req.body.text) {
 		res.send('You can\'t slap yourself silly10.');
-	}
+	} else {
 
 	var selectquery = 'SELECT * FROM slap_variations;';
 
@@ -68,6 +68,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 			});
 
 		});
+	}
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
