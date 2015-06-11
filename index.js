@@ -54,9 +54,6 @@ app.post('/slap', urlencodedParser, function(req, res) {
 			if (err) {
 				res.send("ERROR: " + err);
 			} else {
-				var random_int = randomInt(0, result.rows.length);
-				var slap_message = result.rows[0].replace("name1", req.body.user_name);
-				slap_message = slap_message.replace("name2", req.body.text);
 			}
 		});
 
