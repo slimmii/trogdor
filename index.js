@@ -45,7 +45,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		"name1 slaps name2 violently in the face with a stick.",
 		"name1 kicked name2 in the balls."
 	]
-	var slap_message = slapvariations[0].replace("name1", req.body.user_name);
+	var slap_message = slapvariations[1].replace("name1", req.body.user_name);
 	slap_message = slap_message.replace("name2", req.body.text);
 	messages = {
 		text: "*" + slap_message + "*",
