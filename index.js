@@ -77,19 +77,28 @@ app.post('/slap', urlencodedParser, function(req, res) {
 
 app.post('/addslap', urlencodedParser, function(req, res) {
 
-	var addquery = 'INSERT INTO slap_variations (slap) VALUES (\'' + req.body.text + '\');';
+	var sentence = req.body.text;
+	if (sentence.indexOf("name1") > -1) {
+		if (sentence.indexOf("name2") > -1) {
+			var addquery = 'INSERT INTO slap_variations (slap) VALUES (\'' + sentence + '\');';
 
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query(addquery, function(err, result) {
-			done();
-			if(err) {
-				res.send(err);
-			} else {
-				res.send('SUCCES: Your slap has been added.');
-			}
-			});
+			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+				client.query(addquery, function(err, result) {
+					done();
+					if(err) {
+						res.send(err);
+					} else {
+						res.send('SUCCES: Your slap has been added.');
+					}
+					});
 
-		});
+				});
+		} else {
+			res.send('FAILED: your slap sentence did not contain \'name2\'');
+		}
+	} else {
+		res.send('FAILED: your slap sentence did not contain \'name1\'');
+	}
 });
 
 app.post('/meme', urlencodedParser, function(req, res) {
