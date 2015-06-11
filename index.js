@@ -69,15 +69,6 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 	var addquery = 'INSERT INTO slap_variations (slap) VALUES (\'' + req.body.text + '\');';
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			client.query(addquery, [id], function(err, result) {
-				done();
-				if (err) {
-					console.error(err);
-					res.send("Error " + err);
-				} else {
-					res.send("Your slap has been added.")
-				}
-			});
 		});
 	
 });
