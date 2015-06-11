@@ -44,6 +44,9 @@ function getRandomSlap() {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query(selectquery, function(err, result) {
 			done();
+			if (err) {
+				res.send(err);
+			}
 		});
 	});
 
