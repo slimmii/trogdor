@@ -64,6 +64,18 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	res.send('');
 });
 
+app.post('/addslap', urlencodedParser, function(req, res) {
+
+	var addquery = 'insert into slap_variations (slap) values \'' + req.body.text + '\';';
+
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query(addquery, function(err, result) {
+			done();
+		});
+	});
+	
+});
+
 app.post('/meme', urlencodedParser, function(req, res) {
 	var arguments = [];
 	if (req.body.text != "") {
