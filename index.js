@@ -36,20 +36,6 @@ function getRandomColor() {
 function randomInt (low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
-
-function getRandomSlap(req, res) {
-	var selectquery = 'SELECT * FROM slap_variations;';
-	var return_value = "Don't know";
-
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query(selectquery, function(err, result) {
-			done();
-		});
-	});
-
-	res.send("Don't know.");
-}
-
 app.post('/swanson', urlencodedParser, function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
 		var ronquote = JSON.parse(body);
@@ -62,7 +48,15 @@ app.post('/slap', urlencodedParser, function(req, res) {
 		res.send("You can't slap yourself silly.");
 	}
 
-	getRandomSlap(req, res);
+	var selectquery = 'SELECT * FROM slap_variations;';
+
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query(selectquery, function(err, result) {
+			done();
+		});
+	});
+
+	res.send("help me");
 });
 
 app.post('/addslap', urlencodedParser, function(req, res) {
