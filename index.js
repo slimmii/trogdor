@@ -40,16 +40,7 @@ function randomInt (low, high) {
 function getRandomSlap() {
 	var selectquery = 'SELECT * FROM slap_variations;';
 	var return_value = "Don't know";
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query(selectquery, function(err, result) {
-			done();
-			if(err) {
-				
-			} else {
-				
-			}
-			});
-		});
+
 	return return_value;
 }
 }
