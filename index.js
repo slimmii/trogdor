@@ -151,12 +151,9 @@ app.post('/meme', urlencodedParser, function(req, res) {
 			console.log(meme.data.url);
 
 			messages = {
-				text: "Meme Generator [" + req.body.user_name + "]",
+				text: "Meme Generator [" + req.body.user_name + "]\n" + meme.data.url,
 				channel: "#" + req.body.channel_name,
-				messages: [{
-					image_url: meme.data.url,
-					fallback: meme.data.url
-				}]
+				attachments: []
 			};
 
 			slack.notify(messages);
