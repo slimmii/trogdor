@@ -323,7 +323,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 	    });
 	} else if (/^[A-Za-z0-9,;'"\s]+$/.test(id)){
 	    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query('SELECT * FROM quotes WHERE quote LIKE $1',[""% + id + "%"], function(err, result) {
+		client.query('SELECT * FROM quotes WHERE quote LIKE $1',["%" + id + "%"], function(err, result) {
 		    done();
 		    if (err) {
 			    console.error(err);
