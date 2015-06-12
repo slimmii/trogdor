@@ -268,10 +268,13 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 
 });
 
-function parseQuote(quote, req) {
+function parseQuote(quote, req, curQuote, totalQuotes) {
 	messages = {
 		text: "[" + quote.id + "] " + quote.quote,
 		channel: ["#" + req.body.channel_name]
+	}
+	if (typeof curQuote != 'undefined'){
+	    messages.text += "(Quote " + curQuote + " of " + totalQuotes + ")";
 	}
 	return messages;
 }
@@ -320,14 +323,15 @@ app.post('/quote', urlencodedParser, function(req, res) {
 	    });
 	} else if (/^[A-Za-z0-9,;'"\s]+$/.test(id)){
 	    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		client.query('SELECT * FROM quotes WHERE quote LIKE $1',["%" + id + "%"], function(err, result) {
+		client.query('SELECT * FROM quotes WHERE quote LIKE $1',[""% + id + "%"], function(err, result) {
 		    done();
 		    if (err) {
 			    console.error(err);
 			    res.send("Error " + err);
 		    } else {
 			    if (result.rows.length > 0) {
-				    slack.notify(parseQuote(result.rows[randomInt(0, result.rows.length-1)], req));
+				    var pos = randomInt(0, result.rows.length-1);
+				    slack.notify(parseQuote(result.rows[pos], req, pos, result.rows.length));
 				    res.send("");
 			    } else {
 				    res.send("I'm sorry this quote could not be found!");
