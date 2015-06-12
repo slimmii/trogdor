@@ -101,6 +101,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 	}
 });
 
+
 app.post('/addslap', urlencodedParser, function(req, res) {
 
 	var sentence = req.body.text;
