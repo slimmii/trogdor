@@ -340,7 +340,23 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		});
 	    });
 	} else {
-		res.send("Error: Invalid command. Either use '/quote <id>' of '/quote <text>'");
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('SELECT * FROM quotes', function(err, result) {
+		done();
+		if (err) {
+			console.error(err);
+			res.send("Error " + err);
+		} else {
+			if (result.rows.length > 0) {
+				var pos = randomInt(0, result.rows.length-1);
+				slack.notify(parseQuote(result.rows[pos], req, pos, result.rows.length));
+				res.send("");
+			} else {
+				res.send("I'm sorry this quote could not be found!");
+			}
+		}
+		});
+	    });
 	}
 });
 
