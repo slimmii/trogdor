@@ -33,8 +33,8 @@ function getRandomColor() {
 	return color;
 }
 
-function randomInt (low, high) {
-    return Math.floor(Math.random() * (high - low) + low);
+function randomInt(low, high) {
+	return Math.floor(Math.random() * (high - low) + low);
 }
 app.post('/swanson', urlencodedParser, function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
@@ -43,17 +43,43 @@ app.post('/swanson', urlencodedParser, function(req, res) {
 	});
 });
 
+app.post('/giphy', urlencodedParser, function(req, res) {
+	var giphy = require('giphy')('dc6zaTOxFJmzC');
+
+	giphy.search({q : req.body.text, limit : 25}, function(e, handleSearch, r) {
+		console.log(handleSearch);
+		if (handleSearch.data.length > 0) {
+		var random_int = randomInt(0, handleSearch.data.length);
+		messages = {
+			text: req.body.user_name + ": " + req.body.text + "\n" + handleSearch.data[random_int].url,
+			channel: "#" + req.body.channel_name,
+			attachments: []
+		};
+		
+		slack.notify(messages);
+		res.send('');
+		} else {
+			res.send('No gifs found');
+		}
+	});
+});
+
+function handleSearch(err, handleSearch, res) {
+	console.log(handleSearch);
+}
+
+
 app.post('/slap', urlencodedParser, function(req, res) {
 	if (req.body.user_name == req.body.text) {
 		res.send('You can\'t slap yourself silly.');
 	} else {
 
-	var selectquery = 'SELECT * FROM slap_variations;';
+		var selectquery = 'SELECT * FROM slap_variations;';
 
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			client.query(selectquery, function(err, result) {
 				done();
-				if(err) {
+				if (err) {
 					res.send(err);
 				} else {
 					if (result.rows.length > 0) {
@@ -69,11 +95,12 @@ app.post('/slap', urlencodedParser, function(req, res) {
 						res.send("");
 					}
 				}
-				});
-
 			});
+
+		});
 	}
 });
+
 
 app.post('/addslap', urlencodedParser, function(req, res) {
 
@@ -85,14 +112,14 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				client.query(addquery, function(err, result) {
 					done();
-					if(err) {
+					if (err) {
 						res.send(err);
 					} else {
 						res.send('SUCCES: Your slap has been added.');
 					}
-					});
-
 				});
+
+			});
 		} else {
 			res.send('FAILED: your slap sentence did not contain \'name2\'');
 		}
@@ -124,12 +151,9 @@ app.post('/meme', urlencodedParser, function(req, res) {
 			console.log(meme.data.url);
 
 			messages = {
-				text: "Meme Generator [ " + req.body.user_name + "]",
+				text: "Meme Generator [" + req.body.user_name + "]\n" + meme.data.url,
 				channel: "#" + req.body.channel_name,
-				attachments: [{
-					image_url: meme.data.url,
-					fallback: meme.data.url
-				}]
+				attachments: []
 			};
 
 			slack.notify(messages);
@@ -246,8 +270,8 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 
 function parseQuote(quote, req) {
 	messages = {
-	    text: "[" + quote.id + "] " + quote.quote,
-	    channel: ["#" + req.body.channel_name]
+		text: "[" + quote.id + "] " + quote.quote,
+		channel: ["#" + req.body.channel_name]
 	}
 	return messages;
 }
@@ -312,7 +336,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		});
 	    });
 	} else {
- 	   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			console.log(err);
 
 			client.query('SELECT * FROM quotes', function(err, result) {
