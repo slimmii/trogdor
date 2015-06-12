@@ -51,7 +51,7 @@ app.post('/giphy', urlencodedParser, function(req, res) {
 		if (handleSearch.data.length > 0) {
 		var random_int = randomInt(0, handleSearch.data.length);
 		messages = {
-			text: handleSearch.data[random_int].url,
+			text: req.body.user_name + ": " + req.body.text + "\n" + handleSearch.data[random_int].url,
 			channel: "#" + req.body.channel_name,
 			attachments: []
 		};
@@ -153,7 +153,7 @@ app.post('/meme', urlencodedParser, function(req, res) {
 			messages = {
 				text: "Meme Generator [ " + req.body.user_name + "]",
 				channel: "#" + req.body.channel_name,
-				attachments: [{
+				messages: [{
 					image_url: meme.data.url,
 					fallback: meme.data.url
 				}]
