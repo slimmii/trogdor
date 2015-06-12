@@ -321,7 +321,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		}
 		});
 	    });
-	} else if (/^[A-Za-z0-9,;'"\s]+$/.test(id)){
+	} else if (/^[A-Za-z0-9,;!'"\s]+$/.test(id)){
 	    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('SELECT * FROM quotes WHERE quote LIKE $1',["%" + id + "%"], function(err, result) {
 		    done();
@@ -340,19 +340,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		});
 	    });
 	} else {
-		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			console.log(err);
-
-			client.query('SELECT * FROM quotes', function(err, result) {
-				done();
-				if (err) {
-					console.error(err);
-					res.send("Error " + err);
-				} else {
-					res.send(result.rows);
-				}
-			});
-		});
+		res.send("Error: Invalid command. Either use '/quote <id>' of '/quote <text>'");
 	}
 });
 
