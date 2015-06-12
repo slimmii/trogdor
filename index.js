@@ -331,7 +331,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		    } else {
 			    if (result.rows.length > 0) {
 				    var pos = randomInt(0, result.rows.length-1);
-				    slack.notify(parseQuote(result.rows[pos], req, pos, result.rows.length));
+				    slack.notify(parseQuote(result.rows[pos], req, pos+1, result.rows.length));
 				    res.send("");
 			    } else {
 				    res.send("I'm sorry this quote could not be found!");
@@ -349,7 +349,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		} else {
 			if (result.rows.length > 0) {
 				var pos = randomInt(0, result.rows.length-1);
-				slack.notify(parseQuote(result.rows[pos], req, pos, result.rows.length));
+				slack.notify(parseQuote(result.rows[pos], req, pos+1, result.rows.length));
 				res.send("");
 			} else {
 				res.send("I'm sorry this quote could not be found!");
