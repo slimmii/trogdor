@@ -3,12 +3,12 @@ var slack = new Slack('https://hooks.slack.com/services/T04N3PW6G/B053V2J6X/cZ31
 	channel: "#neejberhood",
 	username: "trogdor",
 	icon_url: "http://i.stack.imgur.com/ihN3m.png"
-})
+});
 var swanson = new Slack('https://hooks.slack.com/services/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', {
 	channel: "#neejberhood",
 	username: "ron.swanson",
 	icon_url: "http://s3-ak.buzzfeed.com/static/enhanced/webdr05/2013/7/21/18/original-16475-1374446648-13.jpg"
-})
+});
 var express = require('express');
 var bodyParser = require('body-parser');
 var htmlToText = require('html-to-text');
@@ -19,7 +19,7 @@ var pg = require('pg');
 
 var urlencodedParser = bodyParser.urlencoded({
 	extended: false
-})
+});
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
@@ -50,14 +50,14 @@ app.post('/giphy', urlencodedParser, function(req, res) {
 		console.log(handleSearch);
 		if (handleSearch.data.length > 0) {
 		var random_int = randomInt(0, handleSearch.data.length);
-		messages = {
+		var messages = {
 			text: req.body.user_name + ": " + req.body.text + "\n" + handleSearch.data[random_int].url,
 			channel: "#" + req.body.channel_name,
 			attachments: []
 		};
 		
 		slack.notify(messages);
-		res.send('');
+		res.end();
 		} else {
 			res.send('No gifs found');
 		}
@@ -87,12 +87,12 @@ app.post('/slap', urlencodedParser, function(req, res) {
 						var slap_message = result.rows[random_int].slap;
 						slap_message = slap_message.replace(/slapper/gi, req.body.user_name);
 						slap_message = slap_message.replace(/slappee/gi, req.body.text);
-						messages = {
+						var messages = {
 							text: "*" + slap_message + "*",
 							channel: "#" + req.body.channel_name
 						};
 						slack.notify(messages);
-						res.send("");
+						res.end();
 					}
 				}
 			});
@@ -150,14 +150,14 @@ app.post('/meme', urlencodedParser, function(req, res) {
 			var meme = JSON.parse(body);
 			console.log(meme.data.url);
 
-			messages = {
+			var messages = {
 				text: "Meme Generator [" + req.body.user_name + "]\n" + meme.data.url,
 				channel: "#" + req.body.channel_name,
 				attachments: []
 			};
 
 			slack.notify(messages);
-			res.send('');
+			res.end();
 
 
 		})
@@ -179,7 +179,7 @@ app.post('/meme', urlencodedParser, function(req, res) {
 app.post('/calendar/winak', urlencodedParser, function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
-		messages = {
+		var messages = {
 			text: "WINAK Kalender",
 			channel: "#" + req.body.channel_name,
 			attachments: []
@@ -201,14 +201,14 @@ app.post('/calendar/winak', urlencodedParser, function(req, res) {
 
 		slack.notify(messages);
 
-		res.send('');
+		res.end();
 	});
 });
 
 app.post('/calendar/neejberhood', urlencodedParser, function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/epo9gispro34af2goam9dekscg%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
-		messages = {
+		var messages = {
 			text: "Neejberhood Kalender",
 			channel: "#" + req.body.channel_name,
 			attachments: []
@@ -230,7 +230,7 @@ app.post('/calendar/neejberhood', urlencodedParser, function(req, res) {
 
 		slack.notify(messages);
 
-		res.send('');
+		res.end();
 	});
 });
 
@@ -239,7 +239,7 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 	//slack.notify(messages);
 	requestLib.get('http://wikiwiki.winak.be/index.php/' + req.body.text, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
-			$ = cheerio.load(body);
+			var $ = cheerio.load(body);
 
 			var text = htmlToText.fromString($('#bodyContent').html(), {});
 			console.log(text);
@@ -250,7 +250,7 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 				""
 			);
 
-			messages = {
+			var messages = {
 				text: "WINAK WikiWiki",
 				channel: "#neejberhood",
 				attachments: [{
@@ -263,16 +263,16 @@ app.post('/wikiwiki', urlencodedParser, function(req, res) {
 
 			slack.notify(messages);
 		}
-		res.send('');
+		res.end();
 	});
 
 });
 
 function parseQuote(quote, req, curQuote, totalQuotes) {
-	messages = {
+	var messages = {
 		text: "[" + quote.id + "] " + quote.quote,
 		channel: ["#" + req.body.channel_name]
-	}
+	};
 	if (typeof curQuote != 'undefined'){
 	    messages.text += "(Quote " + curQuote + " of " + totalQuotes + ")";
 	}
@@ -280,7 +280,7 @@ function parseQuote(quote, req, curQuote, totalQuotes) {
 }
 
 app.post('/lastquote', urlencodedParser, function(req, res) {
-    
+
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('select * from quotes order by id desc limit 1;', function(err, result) {
 			done();
@@ -290,7 +290,7 @@ app.post('/lastquote', urlencodedParser, function(req, res) {
 			} else {
 				if (result.rows.length > 0) {
 					slack.notify(parseQuote(result.rows[0], req));
-					res.send("");
+					res.end();
 				} else {
 					res.send("There were no quotes available");
 				}
@@ -314,7 +314,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 		} else {
 			if (result.rows.length > 0) {
 				slack.notify(parseQuote(result.rows[0], req));
-				res.send("");
+				res.end();
 			} else {
 				res.send("I'm sorry this quote could not be found!");
 			}
@@ -332,7 +332,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 			    if (result.rows.length > 0) {
 				    var pos = randomInt(0, result.rows.length-1);
 				    slack.notify(parseQuote(result.rows[pos], req, pos+1, result.rows.length));
-				    res.send("");
+				    res.end();
 			    } else {
 				    res.send("I'm sorry this quote could not be found!");
 			    }
@@ -350,7 +350,7 @@ app.post('/quote', urlencodedParser, function(req, res) {
 			if (result.rows.length > 0) {
 				var pos = randomInt(0, result.rows.length-1);
 				slack.notify(parseQuote(result.rows[pos], req, pos+1, result.rows.length));
-				res.send("");
+				res.end();
 			} else {
 				res.send("I'm sorry this quote could not be found!");
 			}
