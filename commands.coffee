@@ -4,6 +4,7 @@ request = require 'request'
 module.exports = (app) ->
   app.post '/isitup', (req, res) ->
     website = req.body.text
+    return res.send "Try /isitup [domain]" if website.length is 0
     request
       url: "http://isitup.org/#{website}.json"
       headers:
@@ -14,6 +15,8 @@ module.exports = (app) ->
       message =
         text: null
         channel: '#' + req.body.channel_name
+
+      # Status code can take on 3 different values
       message.text = switch body.status_code
         when 1 then "*#{website} is up and running.*"
         when 2 then "*#{website} seems to be down at the moment.*"
