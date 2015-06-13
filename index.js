@@ -16,13 +16,13 @@ var requestLib = require('request');
 var cheerio = require('cheerio');
 var app = express();
 var pg = require('pg');
-
-var urlencodedParser = bodyParser.urlencoded({
-	extended: false
-});
+// registers the coffee-script compiler so coffeescript files can be included
+//require('coffee-script/register');
+//var setupCommands = require('./commands');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({extended: false}));
 
 function getRandomColor() {
 	var letters = '0123456789ABCDEF'.split('');
@@ -36,14 +36,17 @@ function getRandomColor() {
 function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low) + low);
 }
-app.post('/swanson', urlencodedParser, function(req, res) {
+
+//setupCommands(app);
+
+app.post('/swanson', function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
 		var ronquote = JSON.parse(body);
 		swanson.notify(ronquote.quote);
 	});
 });
 
-app.post('/giphy', urlencodedParser, function(req, res) {
+app.post('/giphy', function(req, res) {
 	var giphy = require('giphy')('dc6zaTOxFJmzC');
 
 	giphy.search({q : req.body.text, limit : 25}, function(e, handleSearch, r) {
@@ -69,7 +72,7 @@ function handleSearch(err, handleSearch, res) {
 }
 
 
-app.post('/slap', urlencodedParser, function(req, res) {
+app.post('/slap', function(req, res) {
 	if (req.body.user_name == req.body.text) {
 		res.send('You can\'t slap yourself silly.');
 	} else {
@@ -102,7 +105,7 @@ app.post('/slap', urlencodedParser, function(req, res) {
 });
 
 
-app.post('/addslap', urlencodedParser, function(req, res) {
+app.post('/addslap', function(req, res) {
 
 	var sentence = req.body.text;
 	if (sentence.indexOf("slapper") > -1) {
@@ -128,7 +131,7 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 	}
 });
 
-app.post('/meme', urlencodedParser, function(req, res) {
+app.post('/meme', function(req, res) {
 	var arguments = [];
 	if (req.body.text != "") {
 		arguments = req.body.text.match(/(".*?"|[^"\s]+)+(?=\s*|\s*$)/g);
@@ -176,7 +179,7 @@ app.post('/meme', urlencodedParser, function(req, res) {
 	}
 });
 
-app.post('/calendar/winak', urlencodedParser, function(req, res) {
+app.post('/calendar/winak', function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/winak.be_jdku0e5md1sildhoom7225f9r4%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
 		var messages = {
@@ -205,7 +208,7 @@ app.post('/calendar/winak', urlencodedParser, function(req, res) {
 	});
 });
 
-app.post('/calendar/neejberhood', urlencodedParser, function(req, res) {
+app.post('/calendar/neejberhood', function(req, res) {
 	requestLib.get('http://www.google.com/calendar/feeds/epo9gispro34af2goam9dekscg%40group.calendar.google.com/public/basic?orderby=starttime&sortorder=ascending&futureevents=true&alt=json', function(error, response, body) {
 		var google = JSON.parse(body);
 		var messages = {
@@ -234,7 +237,7 @@ app.post('/calendar/neejberhood', urlencodedParser, function(req, res) {
 	});
 });
 
-app.post('/wikiwiki', urlencodedParser, function(req, res) {
+app.post('/wikiwiki', function(req, res) {
 
 	//slack.notify(messages);
 	requestLib.get('http://wikiwiki.winak.be/index.php/' + req.body.text, function(error, response, body) {
@@ -279,7 +282,7 @@ function parseQuote(quote, req, curQuote, totalQuotes) {
 	return messages;
 }
 
-app.post('/lastquote', urlencodedParser, function(req, res) {
+app.post('/lastquote', function(req, res) {
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('select * from quotes order by id desc limit 1;', function(err, result) {
@@ -300,7 +303,7 @@ app.post('/lastquote', urlencodedParser, function(req, res) {
 
 });
 
-app.post('/quote', urlencodedParser, function(req, res) {
+app.post('/quote', function(req, res) {
 	console.log(process.env.DATABASE_URL);
 	var id = req.body.text;
 
