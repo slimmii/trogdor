@@ -1,4 +1,5 @@
 request = require 'request'
+_ = require 'lodash'
 {slack} = require './common.js'
 
 module.exports = (app) ->
@@ -24,3 +25,16 @@ module.exports = (app) ->
       slack.notify message
       res.end()
 
+  MAX_CATS = 300
+  app.post '/cat', (req, res) ->
+    request
+      url: 'http://catoverflow.com/api/query'
+      qs:
+        offset: _.random 0, MAX_CATS
+        limit: 1
+    , (err, catResponse, body) ->
+      message =
+        text: body
+        channel: '#' + req.body.channel_name
+      slack.notify message
+      res.end()
