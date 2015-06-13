@@ -1,9 +1,4 @@
-Slack = require('node-slackr');
-var slack = new Slack('https://hooks.slack.com/services/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', {
-	channel: "#neejberhood",
-	username: "trogdor",
-	icon_url: "http://i.stack.imgur.com/ihN3m.png"
-});
+var Slack = require('node-slackr');
 var swanson = new Slack('https://hooks.slack.com/services/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', {
 	channel: "#neejberhood",
 	username: "ron.swanson",
@@ -16,9 +11,11 @@ var requestLib = require('request');
 var cheerio = require('cheerio');
 var app = express();
 var pg = require('pg');
+var common = require('./common');
+var slack = common.slack;
 // registers the coffee-script compiler so coffeescript files can be included
-//require('coffee-script/register');
-//var setupCommands = require('./commands');
+require('coffee-script/register');
+var setupCommands = require('./commands');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
@@ -37,7 +34,7 @@ function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low) + low);
 }
 
-//setupCommands(app);
+setupCommands(app);
 
 app.post('/swanson', function(req, res) {
 	requestLib.get('http://ron-swanson-quotes.herokuapp.com/quotes', function(error, response, body) {
