@@ -33,6 +33,7 @@ module.exports = (app) ->
         offset: _.random 0, MAX_CATS
         limit: 1
     , (err, catResponse, body) ->
+      return res.send "Catoverflow seems to be down for the moment :(" if err or body.length is 0
       message =
         text: body
         channel: '#' + req.body.channel_name
