@@ -85,8 +85,8 @@ app.post('/slap', urlencodedParser, function(req, res) {
 					if (result.rows.length > 0) {
 						var random_int = randomInt(0, result.rows.length);
 						var slap_message = result.rows[random_int].slap;
-						slap_message = slap_message.replace("name1", req.body.user_name);
-						slap_message = slap_message.replace("name2", req.body.text);
+						slap_message = slap_message.replace(/slapper/gi, req.body.user_name);
+						slap_message = slap_message.replace(/slappee/gi, req.body.text);
 						messages = {
 							text: "*" + slap_message + "*",
 							channel: "#" + req.body.channel_name
@@ -105,8 +105,8 @@ app.post('/slap', urlencodedParser, function(req, res) {
 app.post('/addslap', urlencodedParser, function(req, res) {
 
 	var sentence = req.body.text;
-	if (sentence.indexOf("name1") > -1) {
-		if (sentence.indexOf("name2") > -1) {
+	if (sentence.indexOf("slapper") > -1) {
+		if (sentence.indexOf("slappee") > -1) {
 			var addquery = 'INSERT INTO slap_variations (slap) VALUES (\'' + sentence + '\');';
 
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -121,10 +121,10 @@ app.post('/addslap', urlencodedParser, function(req, res) {
 
 			});
 		} else {
-			res.send('FAILED: your slap sentence did not contain \'name2\'');
+			res.send('FAILED: your slap sentence did not contain \'slapper\'');
 		}
 	} else {
-		res.send('FAILED: your slap sentence did not contain \'name1\'');
+		res.send('FAILED: your slap sentence did not contain \'slappee\'');
 	}
 });
 
