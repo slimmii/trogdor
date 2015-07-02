@@ -30,6 +30,10 @@ module.exports = function(app) {
     });
   });
 
+  app.post('/buienradar', function(req, res) {
+    slack.notify('http://buienradar.nl/image/?type=forecast3hourszozw&fn=buienradarnl-1x1-ani700-verwachting-3uur.gif');
+  });
+
   app.post('/giphy', function(req, res) {
     var giphy = require('giphy')('dc6zaTOxFJmzC');
 
